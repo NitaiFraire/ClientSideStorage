@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     headingAdministra.textContent = 'Agrega citas para comenzar';
                     let listado = document.createElement('p');
                     listado.classList.add('text-center');
-                    listado.textConten = 'No hay registros';
+                    listado.textContent = 'No hay registros';
                     citas.appendChild(listado);
                 
                 }else{
@@ -158,7 +158,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function borrarCita(e){
 
-        let citaId = e.target.parentElement.getAttribute('data-cita-id');
-        
+        let citaId = Number(e.target.parentElement.getAttribute('data-cita-id'));
+
+        let transaction = DB.transaction(['citas'], 'readwrite');
+        let objectStore = transaction.objectStore('citas');
+        let peticion = objectStore.delete(citaId);
+
+        transaction.oncomplete = () => {
+
+            e.target.parentElement.parentElement.removeChild(e.target.parentElement);
+            console.log(`se elimino la cita con el id: ${citaId}`);
+
+            if(!citas.firstChild){
+                    
+                // no hay registros
+                headingAdministra.textContent = 'Agrega citas para comenzar';
+                let listado = document.createElement('p');
+                listado.classList.add('text-center');
+                listado.textContent = 'No hay registros';
+                citas.appendChild(listado);
+            
+            }else{
+
+                headingAdministra.textContent = 'Administra tus citas';
+            }
+        }
+
     }
 });
