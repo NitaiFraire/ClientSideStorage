@@ -29,6 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // asignar a la base de datos
         DB = crearDB.result;
+
+        mostrarCitas();
     }
 
     // método que solo corre una vez y es ideal para crear el Schema
@@ -79,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         transaction.oncomplete = () => {
 
-            console.log('cita agregada');
+            mostrarCitas();
         }
 
         transaction.onerror = () => {
@@ -87,4 +89,44 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('error al agregar');
         }
     });
+
+
+    function mostrarCitas(){
+
+        // limpiar las citas anteriores
+        while(citas.firstChild){
+
+            citas.removeChild(citas.firstChild);
+        }
+
+        // crear objectstore
+        let objectStore = DB.transaction('citas').objectStore('citas');
+
+        // esto retorna una peticion
+        objectStore.openCursor().onsuccess = e => {
+
+            // cursos se va aubicar en el registro indicado pra acceder a los datos
+            let cursor = e.target.result;
+
+            if(cursor){
+
+                let citaHtml = document.createElement('li');
+                citaHtml.setAttribute('data-cita-id', cursor.value.key);
+                citaHtml.classList.add('list-group-item');
+
+                citaHtml.innerHTML = `
+                                        <p class="font-weight-bold">Mascota: <span class="font-weight-normal">${cursor.value.mascota}</span></p>
+                                        <p class="font-weight-bold">Cliente: <span class="font-weight-normal">${cursor.value.cliente}</span></p>
+                                        <p class="font-weight-bold">Telefono: <span class="font-weight-normal">${cursor.value.telefono}</span></p>
+                                        <p class="font-weight-bold">Fecha: <span class="font-weight-normal">${cursor.value.fecha}</span></p>
+                                        <p class="font-weight-bold">Hora: <span class="font-weight-normal">${cursor.value.hora}</span></p>
+                                        <p class="font-weight-bold">Sintomas: <span class="font-weight-normal">${cursor.value.sintomas}</span></p>
+                                        `;
+                
+                // apend en el pader
+                citas.appendChild(citaHtml);
+                cursor.continue();
+            }
+        }
+    }
 });
