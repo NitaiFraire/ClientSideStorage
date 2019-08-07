@@ -48,10 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
         objectStore.createIndex('fecha', 'fecha', { unique: false });
         objectStore.createIndex('hora', 'hora', { unique: false });
         objectStore.createIndex('sintomas', 'sintomas', { unique: false });
-
-        console.log('base de datos lista');
-
-
     }
 
 
@@ -69,7 +65,26 @@ document.addEventListener('DOMContentLoaded', () => {
             sintomas: sintomas.value
         }
 
-        console.log(nuevaCita);
+        // en indexdb se utilizan las transacciones para insertar
+        let transaction = DB.transaction(['citas'], 'readwrite');
+        let objectStore = transaction.objectStore('citas');
 
+        let peticion = objectStore.add(nuevaCita);
+        console.log(peticion);
+
+        peticion.onsuccess = () => {
+
+            formulario.reset();
+        }
+
+        transaction.oncomplete = () => {
+
+            console.log('cita agregada');
+        }
+
+        transaction.onerror = () => {
+
+            console.log('error al agregar');
+        }
     });
 });
