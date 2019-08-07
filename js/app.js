@@ -125,7 +125,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // apend en el pader
                 citas.appendChild(citaHtml);
+
+                // consultar proximos registros
                 cursor.continue();
+            
+            }else{
+                
+                if(!citas.firstChild){
+                    
+                    // no hay registros
+                    headingAdministra.textContent = 'Agrega citas para comenzar';
+                    let listado = document.createElement('p');
+                    listado.classList.add('text-center');
+                    listado.textConten = 'No hay registros';
+                    citas.appendChild(listado);
+                
+                }else{
+
+                    headingAdministra.textContent = 'Administra tus citas';
+                }
             }
         }
     }
