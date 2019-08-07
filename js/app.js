@@ -27,11 +27,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // si no hay errores, mostrar en conola y asignar la base de datos
     crearDB.onsuccess = function(){
 
-        console.log('toodo listo');
         // asignar a la base de datos
         DB = crearDB.result;
-        console.log(DB);
     }
 
+    // método que solo corre una vez y es ideal para crear el Schema
+    crearDB.onupgradeneeded = function(e){
+
+        // el evento es la misma base de datos
+        let db = e.target.result;
+        
+        // definir object store, 2 parametros: db y las opciones
+        // keypath es el indice de la base de datos
+        let objectStore = db.createObjectStore('citas', { keyPath: 'key', autoIncrement: true });
+
+        // crear indices y campos de la db, createIndex: 3 parametros, nombre, keypath y opciones
+        objectStore.createIndex('mascota', 'mascota', { unique: false });
+        
+
+    }
 
 });
