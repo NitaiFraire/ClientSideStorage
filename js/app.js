@@ -43,8 +43,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // crear indices y campos de la db, createIndex: 3 parametros, nombre, keypath y opciones
         objectStore.createIndex('mascota', 'mascota', { unique: false });
-        
+        objectStore.createIndex('cliente', 'cliente', { unique: true });
+        objectStore.createIndex('telefono', 'telefono', { unique: true });
+        objectStore.createIndex('fecha', 'fecha', { unique: false });
+        objectStore.createIndex('hora', 'hora', { unique: false });
+        objectStore.createIndex('sintomas', 'sintomas', { unique: false });
+
+        console.log('base de datos lista');
+
 
     }
 
+
+    formulario.addEventListener('submit', function(e){
+
+        e.preventDefault();
+
+        const nuevaCita = {
+            
+            mascota: mascota.value,
+            cliente: cliente.value,
+            telefono: telefono.value,
+            fecha: fecha.value,
+            hora: hora.value,
+            sintomas: sintomas.value
+        }
+
+        console.log(nuevaCita);
+
+    });
 });
